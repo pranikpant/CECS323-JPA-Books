@@ -393,7 +393,7 @@ public class BookMain {
       System.out.println("Enter the title of the book: ");
       String title = sc.nextLine().trim();
       System.out.println("Enter the published year of the book: ");
-      int year = sc.nextInt();
+      int year = getIntRange(1,2021);
       System.out.println("Enter the publisher's name of the book: ");
       String pname = sc.nextLine().trim();
       System.out.println("Enter the author's name of the book: ");
