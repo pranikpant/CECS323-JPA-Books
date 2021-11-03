@@ -10,7 +10,7 @@ import java.util.ArrayList;
         @NamedNativeQuery(name = "ReturnAuthorInfo",
                 query = "Select * " +
                         "FROM AuthoringEntity " +
-                        "WHERE publisherName = ?",
+                        "WHERE name = ?",
                 resultClass = AuthoringEntity.class),
         @NamedNativeQuery(name = "AuthorEntityCount",
                 query = "Select count(*) " +
@@ -18,6 +18,7 @@ import java.util.ArrayList;
                         "WHERE authorEmail = ?")
 })
 public abstract class AuthoringEntity {
+
     /**The email of the author*/
     @Id
     @Column(nullable = false,length = 30)

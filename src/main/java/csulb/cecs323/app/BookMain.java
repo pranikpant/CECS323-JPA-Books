@@ -86,8 +86,8 @@ public class BookMain {
       authors.add(new AdHocTeam("SecretAgent@yahoo.com", "Militant Secret Agents"));
 
       List<Book> books = new ArrayList<>();
-      books.add(new Book("12345", "Harry Potty", 1999, bookMain.getPublisher("Bob Murph"), bookMain.getAuthor("Writewell")));
-      books.add(new Book("77034", "I want to sleep", 2021, bookMain.getPublisher("Tameka Benjaminson"), bookMain.getAuthor("Fighting Tanks")));
+      books.add(new Book("12345", "Harry Potty", 1999, publishers.get(0), authors.get(2)));
+      books.add(new Book("77034", "I want to sleep", 2021, publishers.get(2), authors.get(1)));
       
       bookMain.createEntity(publishers);
       bookMain.createEntity(authors);
@@ -127,10 +127,12 @@ public class BookMain {
                if (subOption2 == 1) {
                   WritingGroup wg = BookMain.addWritingGroup(manager, bookMain);
                   manager.persist(wg);
+                  manager.getTransaction().commit();
                   
                } else if (subOption2 == 2) {
                   IndividualAuthor ia = BookMain.addIndividualAuthor(manager, bookMain);
                   manager.persist(ia);
+                  manager.getTransaction().commit();
 
                } else if (subOption2 == 3) {
                }else if (subOption2 == 4) {
@@ -138,12 +140,16 @@ public class BookMain {
             }
             //If user chooses to add new publisher
             else if (choice1 == 2) {
+               //manager.getTransaction().begin();
                Publisher pub = BookMain.addPublisher(manager);
                manager.persist(pub);
+               manager.getTransaction().commit();
             }
             else {
                Book book = BookMain.addBook(manager, bookMain);
+               books.add(book);
                manager.persist(book);
+               manager.getTransaction().commit();
             }
          }
 
@@ -158,7 +164,7 @@ public class BookMain {
                System.out.println("List of publishers.");
                for(int i = 0; i < publishers.size(); i++)
                {
-                  System.out.println((i+1) + "." + publishers.get(i).getPublisherName());
+                  System.out.println((i+1) + ". " + publishers.get(i).getPublisherName());
                }
                System.out.println("Please select a publisher.");
                int pubChoice = getIntRange(1,publishers.size());
@@ -167,20 +173,23 @@ public class BookMain {
                System.out.println("Publisher Number: " + publishers.get(pubChoice - 1).getPhoneNumber());
                System.out.println("Publisher Email: "+ publishers.get(pubChoice - 1).getPublisherEmail());
                System.out.println("Publisher Books: "+ publishers.get(pubChoice - 1).getBook());
+               System.out.println("\n");
 
             } else if (subOption1 == 2) {
-               /**System.out.println("List of books.");
+               System.out.println("List of books.");
                for(int i = 0; i < books.size(); i++)
                {
-                  System.out.println((i+1) + "." + books.get(i).getTitle());
+                  System.out.println((i+1) + ". " + books.get(i).getTitle());
                }
-               System.out.println("Please select a book.");
-               int bookChoice = getIntRange(1,publishers.size());
+               System.out.println("Please select a book: ");
+               int bookChoice = getIntRange(1,books.size());
 
-               System.out.println("Book Title: " + books.get(bookChoice - 1).getTitle());
-               System.out.println("Book ISBN: " + books.get(bookChoice - 1).getISBN());
-               System.out.println("Book Publisher: " + books.get(bookChoice - 1).getPublisherName());
-               System.out.println("Book Publication Year: " + books.get(bookChoice - 1).getYearPublished()); */
+               System.out.println("Title: " + books.get(bookChoice - 1).getTitle());
+               System.out.println("ISBN: " + books.get(bookChoice - 1).getISBN());
+               System.out.println("Publisher: " + books.get(bookChoice - 1).getPublisherName());
+               System.out.println("Publication Year: " + books.get(bookChoice - 1).getYearPublished());
+               System.out.println("Authoring Entity: " + "\n" + books.get(bookChoice-1).getAuthorEmail());
+               System.out.println("\n");
 
             } else if (subOption1 == 3) {
             }
@@ -188,24 +197,17 @@ public class BookMain {
 
          //If user chooses to delete a Book
          else if (choice == 3) {
-            String ISBN = sc.nextLine().trim();
-            System.out.println("Enter the title of the book: ");
-            String title = sc.nextLine().trim();
-            System.out.println("Enter the publisher's name of the book: ");
-            String pname = sc.nextLine().trim();
-            Publisher pub = bookMain.getPublisher(pname);
-            System.out.println("Enter the author's name of the book: ");
-            String aname = sc.nextLine().trim();
-            AuthoringEntity author = bookMain.getAuthor(aname);
-            Book b = bookMain.getBook(ISBN, title, pub, author);
-            if (b != null) {
-               manager.getTransaction().begin();
-               manager.remove(b);
-               manager.getTransaction().commit();
-               System.out.println(b.getTitle() + "was deleted!");
-            } else {
-               System.out.println("Sorry, this book does not exist in our database.");
+            System.out.println("List of books.");
+            for(int i = 0; i < books.size(); i++)
+            {
+               System.out.println((i+1) + ". " + books.get(i).getTitle());
             }
+            System.out.println("Please select a book to delete: ");
+            int bookChoice = getIntRange(1,books.size());
+            manager.getTransaction().begin();
+            Book b = books.remove(bookChoice-1);
+            manager.persist(b);
+            manager.getTransaction().commit();
          }
 
          //If user chooses to update a Book
@@ -298,7 +300,18 @@ public class BookMain {
          return author.get(0);
       }
    }// End of the getAuthor method
-
+   public AuthoringEntity getAuthorByEmail (String email) {
+      // Run the native query that we defined in the publisher entity to find the right publisher.
+      List<AuthoringEntity> author = this.entityManager.createNamedQuery("ReturnAuthorInfo",
+              AuthoringEntity.class).setParameter(1, email).getResultList();
+      if (author.size() == 0) {
+         // Invalid name passed in.
+         return null;
+      } else {
+         // Return the author entity object that they asked for.
+         return author.get(0);
+      }
+   }
    /**
     * Find the right Book with information that you pass in
     * @param ISBN       The ISBN of the Book that you are looking for.
