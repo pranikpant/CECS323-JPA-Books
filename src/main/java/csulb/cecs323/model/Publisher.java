@@ -19,7 +19,7 @@ import java.util.ArrayList;
         @NamedNativeQuery(name = "ReturnPubInfo",
                 query = "Select * " +
                         "FROM Publisher " +
-                        "WHERE name = ?",
+                        "WHERE publisherName = ?",
                 resultClass = Book.class),
 })
 public class Publisher {

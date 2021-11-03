@@ -4,6 +4,12 @@ import javax.persistence.*;
 
 @Entity
 @DiscriminatorValue("WritingGroup")
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "WritingGroupCount",
+                query = "Select count(*) " +
+                        "FROM WritingGroup " +
+                        "WHERE authorEmail = ?"),
+})
 public class WritingGroup extends AuthoringEntity{
     /**The head writer of the writing group*/
     @Column
@@ -35,5 +41,11 @@ public class WritingGroup extends AuthoringEntity{
     {
         return "Name: " + this.getName() + "\nauthorEmail: " + this.getauthorEmail() + "\n Head Writer: " +
                 this.getWriter() + "\nYear Formed: "  + this.getYearFormed();
+    }
+    public static int countWGEmail(EntityManager em, String email) {
+        Query query = em.createNamedQuery("WritingGroupCount").
+                setParameter(1, email);
+        Integer count = ((Number) query.getSingleResult()).intValue();
+        return count;
     }
 }

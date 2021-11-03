@@ -6,6 +6,12 @@ import javax.persistence.*;
 
 @Entity
 @DiscriminatorValue("IndividualAuthor")
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "IndividualAuthorCount",
+                query = "Select count(*) " +
+                        "FROM IndividualAuthor " +
+                        "WHERE authorEmail = ?"),
+})
 public class IndividualAuthor extends AuthoringEntity
 {
     @ManyToMany(cascade = CascadeType.ALL)
@@ -26,6 +32,13 @@ public class IndividualAuthor extends AuthoringEntity
 
     public void setAdHocTeams(ArrayList<AdHocTeam> adHocTeams) {
         this.adHocTeams = adHocTeams;
+    }
+
+    public static int countAuthorEmail(EntityManager em, String email) {
+        Query query = em.createNamedQuery("IndividualAuthorCount").
+                setParameter(1, email);
+        Integer count = ((Number) query.getSingleResult()).intValue();
+        return count;
     }
 
 }

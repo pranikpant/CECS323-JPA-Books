@@ -10,8 +10,12 @@ import java.util.ArrayList;
         @NamedNativeQuery(name = "ReturnAuthorInfo",
                 query = "Select * " +
                         "FROM AuthoringEntity " +
-                        "WHERE name = ?",
+                        "WHERE publisherName = ?",
                 resultClass = AuthoringEntity.class),
+        @NamedNativeQuery(name = "AuthorEntityCount",
+                query = "Select count(*) " +
+                        "FROM AuthoringEntity " +
+                        "WHERE authorEmail = ?")
 })
 public abstract class AuthoringEntity {
     /**The email of the author*/
@@ -66,5 +70,12 @@ public abstract class AuthoringEntity {
     public String toString()
     {
         return "Name: " + this.getName() + "\nauthorEmail: " + this.getauthorEmail();
+    }
+
+    public static int countAuthorEntityEmail(EntityManager em, String email) {
+        Query query = em.createNamedQuery("AuthorEntityCount").
+                setParameter(1, email);
+        Integer count = ((Number) query.getSingleResult()).intValue();
+        return count;
     }
 }

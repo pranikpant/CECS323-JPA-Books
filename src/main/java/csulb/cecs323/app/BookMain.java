@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 public class BookMain {
 
    private EntityManager entityManager;
-
+   private static Scanner in = new Scanner( System.in );
    private static final Logger LOGGER = Logger.getLogger(BookMain.class.getName());
 
    public BookMain(EntityManager manager) {
@@ -41,7 +41,7 @@ public class BookMain {
     * @return the valid input.
     */
    public static int getIntRange( int low, int high ) {
-      Scanner in = new Scanner( System.in );
+
       int input = 0;
       boolean valid = false;
       while( !valid ) {
@@ -104,7 +104,7 @@ public class BookMain {
          System.out.println("3. Delete a Book.");
          System.out.println("4. Update a Book.");
          System.out.println("5. List the primary key of all the rows.");
-         System.out.println("6. Exit.");
+         System.out.println("6. Exit.\n");
          int choice = getIntRange(1, 6);
 
          //If user chooses to add new objects
@@ -112,7 +112,7 @@ public class BookMain {
             System.out.println("Choose an object: ");
             System.out.println("1. Add a new Authoring Entity instance.");
             System.out.println("2. Add a new Publisher.");
-            System.out.println("3. Add a new Book.");
+            System.out.println("3. Add a new Book.\n");
             int choice1 = getIntRange(1, 3);
 
             if (choice1 == 1) {
@@ -120,11 +120,17 @@ public class BookMain {
                System.out.println("1. Writing Group");
                System.out.println("2. Individual Author");
                System.out.println("3. Ad Hoc Team");
-               System.out.println("4. Add individual author to an existing Ad Hoc Team");
+               System.out.println("4. Add individual author to an existing Ad Hoc Team\n");
                int subOption2 = getIntRange(1, 4);
 
                if (subOption2 == 1) {
+                  WritingGroup wg = BookMain.addWritingGroup(manager, bookMain);
+                  manager.persist(wg);
+                  
                } else if (subOption2 == 2) {
+                  IndividualAuthor ia = BookMain.addIndividualAuthor(manager, bookMain);
+                  manager.persist(ia);
+
                } else if (subOption2 == 3) {
                }else if (subOption2 == 4) {
                }
@@ -181,17 +187,24 @@ public class BookMain {
 
          //If user chooses to delete a Book
          else if (choice == 3) {
-            String ISBN = sc.nextLine();
+            String ISBN = sc.nextLine().trim();
             System.out.println("Enter the title of the book: ");
-            String title = sc.nextLine();
+            String title = sc.nextLine().trim();
             System.out.println("Enter the publisher's name of the book: ");
-            String pname = sc.nextLine();
+            String pname = sc.nextLine().trim();
             Publisher pub = bookMain.getPublisher(pname);
             System.out.println("Enter the author's name of the book: ");
-            String aname = sc.nextLine();
+            String aname = sc.nextLine().trim();
             AuthoringEntity author = bookMain.getAuthor(aname);
             Book b = bookMain.getBook(ISBN, title, pub, author);
-            manager.remove(b);
+            if (b != null) {
+               manager.getTransaction().begin();
+               manager.remove(b);
+               manager.getTransaction().commit();
+               System.out.println(b.getTitle() + "was deleted!");
+            } else {
+               System.out.println("Sorry, this book does not exist in our database.");
+            }
          }
 
          //If user chooses to update a Book
@@ -317,32 +330,30 @@ public class BookMain {
    public static Publisher addPublisher(EntityManager em) {
       Scanner sc = new Scanner( System.in );
       System.out.println("Enter the name of the Publisher: ");
-      String name = sc.nextLine();
+      String name = sc.nextLine().trim();
       int existingPublisherName = Publisher.countPublisherName(em, name);
       while (existingPublisherName > 0) {
          System.out.println("Error! The publisher with that name has already existed");
          System.out.println("Enter the name of the Publisher: ");
-         name = sc.nextLine();
+         name = sc.nextLine().trim();
          existingPublisherName = Publisher.countPublisherName(em, name);
       }
-
       System.out.println("Enter the email address of the Publisher: ");
-      String email = sc.nextLine();
+      String email = sc.nextLine().trim();
       int existingPublisherEmail = Publisher.countPublisherEmail(em, email);
       while (existingPublisherEmail > 0) {
          System.out.println("Error! The publisher with that email address has already existed");
          System.out.println("Enter the email address of the Publisher: ");
-         email = sc.nextLine();
+         email = sc.nextLine().trim();
          existingPublisherEmail = Publisher.countPublisherEmail(em, email);
       }
-
       System.out.println("Enter the phone number of the Publisher: ");
-      String phone = sc.nextLine();
+      String phone = sc.nextLine().trim();
       int existingPublisherPhone = Publisher.countPublisherPhone(em, phone);
       while (existingPublisherPhone > 0) {
          System.out.println("Error! The publisher with that phone number has already existed");
          System.out.println("Enter the phone number of the Publisher: ");
-         phone = sc.nextLine();
+         phone = sc.nextLine().trim();
          existingPublisherPhone = Publisher.countPublisherPhone(em, phone);
       }
       return new Publisher(name, email, phone);
@@ -357,22 +368,58 @@ public class BookMain {
    public static Book addBook(EntityManager em, BookMain bm) {
       Scanner sc = new Scanner( System.in );
       System.out.println("Enter the ISBN of the book: ");
-      String ISBN = sc.nextLine();
+      String ISBN = sc.nextLine().trim();
       int existingBook = Book.count(em, ISBN);
       while (existingBook > 0) {
-         System.out.println("Error! The book has already existed");
+         System.out.println("Error! The book already exists.");
          System.out.println("Enter the ISBN of the book: ");
-         ISBN = sc.nextLine();
+         ISBN = sc.nextLine().trim();
          existingBook = Book.count(em, ISBN);
       }
       System.out.println("Enter the title of the book: ");
-      String title = sc.nextLine();
+      String title = sc.nextLine().trim();
       System.out.println("Enter the published year of the book: ");
       int year = sc.nextInt();
       System.out.println("Enter the publisher's name of the book: ");
-      String pname = sc.nextLine();
+      String pname = sc.nextLine().trim();
       System.out.println("Enter the author's name of the book: ");
-      String aname = sc.nextLine();
+      String aname = sc.nextLine().trim();
       return new Book (ISBN, title, year, bm.getPublisher(pname), bm.getAuthor(aname));
    }
+
+   public static WritingGroup addWritingGroup(EntityManager em, BookMain bm) {
+      System.out.println("Enter the name of the writing group: ");
+      String wgName = in.nextLine().trim();
+      AuthoringEntity ae = bm.getAuthor(wgName);
+      System.out.println("Enter the email of the writing group: ");
+      String wgEmail = in.nextLine().trim();
+      int numWG = WritingGroup.countWGEmail(em, wgEmail);
+      while (numWG > 0) {
+         System.out.println("This writing group already exists! Please try again.");
+         System.out.println("Enter the email of the writing group: ");
+         wgEmail = in.nextLine().trim();
+         numWG = WritingGroup.countWGEmail(em, wgEmail);
+      }
+      System.out.println("Enter the name of the head writer: ");
+      String wgHead = in.nextLine().trim();
+      System.out.println("Enter the year this writing group was formed: ");
+      int wgYear = in.nextInt();
+      return new WritingGroup (wgEmail, wgName, wgHead, wgYear);
+   }
+
+   public static IndividualAuthor addIndividualAuthor(EntityManager em, BookMain bm) {
+      System.out.println("Enter the author's name: ");
+      String name = in.nextLine().trim();
+      System.out.println("Enter the author's email: ");
+      String email = in.nextLine().trim();
+      int numOfAuth = IndividualAuthor.countAuthorEmail(em, email);
+      while (numOfAuth > 0) {
+         System.out.println("This individual author already exists! Please try again.");
+         System.out.println("Enter the author's email: ");
+         email = in.nextLine().trim();
+         numOfAuth = IndividualAuthor.countAuthorEmail(em, email);
+      }
+      return new IndividualAuthor (email, name);
+   }
+
 } // End of BookMain class
