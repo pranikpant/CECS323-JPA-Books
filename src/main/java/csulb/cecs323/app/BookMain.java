@@ -197,6 +197,12 @@ public class BookMain {
    }// End of the getStyle method
    */
 
+   /**
+    * Prompt the user for the information needed to add a new publisher.
+    * @param em   The application entity manager
+    * @return     A new publisher
+    * @apiNote    There is no way out of this without creating a Publisher instance
+    */
    public static Publisher addPublisher(EntityManager em) {
       Scanner sc = new Scanner( System.in );
       System.out.println("Enter the name of the Publisher: ");
