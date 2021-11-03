@@ -168,8 +168,17 @@ public class BookMain {
 
          //If user chooses to delete a Book
          else if (choice == 3) {
-            //fixme
-            cont = false;
+            String ISBN = sc.nextLine();
+            System.out.println("Enter the title of the book: ");
+            String title = sc.nextLine();
+            System.out.println("Enter the publisher's name of the book: ");
+            String pname = sc.nextLine();
+            Publisher pub = bookMain.getPublisher(pname);
+            System.out.println("Enter the author's name of the book: ");
+            String aname = sc.nextLine();
+            AuthoringEntity author = bookMain.getAuthor(aname);
+            Book b = bookMain.getBook(ISBN, title, pub, author);
+            manager.remove(b);
          }
 
          //If user chooses to update a Book
@@ -238,7 +247,7 @@ public class BookMain {
          // Invalid name passed in.
          return null;
       } else {
-         // Return the style object that they asked for.
+         // Return the publisher object that they asked for.
          return pub.get(0);
       }
    }// End of the getPublisher method
@@ -258,10 +267,33 @@ public class BookMain {
          // Invalid name passed in.
          return null;
       } else {
-         // Return the style object that they asked for.
+         // Return the author entity object that they asked for.
          return author.get(0);
       }
    }// End of the getAuthor method
+
+   /**
+    * Find the right Book with information that you pass in
+    * @param ISBN       The ISBN of the Book that you are looking for.
+    * @param title      The title of the Book that you are looking for.
+    * @param pub        The publisher of the Book that you are looking for.
+    * @param au         The author of the Book that you are looking for.
+    * @return           The Book instance corresponding to that info.
+    */
+
+   public Book getBook (String ISBN, String title, Publisher pub, AuthoringEntity au) {
+      // Run the native query that we defined in the Book entity to find the right book.
+      List<Book> b = this.entityManager.createNamedQuery("ReturnBookInfo",
+              Book.class).setParameter(1, ISBN).setParameter(2,title).
+              setParameter(3,pub).setParameter(4,au).getResultList();
+      if (b.size() == 0) {
+         // Invalid name passed in.
+         return null;
+      } else {
+         // Return the book object that they asked for.
+         return b.get(0);
+      }
+   }// End of the getBook method
 
    /**
     * Prompt the user for the information needed to add a new publisher.

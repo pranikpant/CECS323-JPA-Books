@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NamedNativeQueries({
         @NamedNativeQuery(name = "ReturnBookInfo", query = "Select * " +
                 "FROM BOOKS " +
-                "Where ISBN = ?",
+                "Where ISBN = ? AND title = ? AND publisherName = ? AND authorEmail=?",
                 resultClass = Book.class),
         @NamedNativeQuery(name = "Book.count",
                 query = "Select count(*) " +
