@@ -72,12 +72,25 @@ public class BookMain {
       tx.begin();
 
       List<Publisher> publishers = new ArrayList<>();
-      publishers.add(new Publisher("bob murph", "paint@me.com", "1234"));
-      //List<Book> books = new ArrayList<>();
+      publishers.add(new Publisher("Bob Murph", "paint@me.com", "740-757-1378"));
+      publishers.add(new Publisher("Ceara Church", "cearch@gmail.com", "805-294-2124"));
+      publishers.add(new Publisher("Tameka Benjaminson", "tabe@yahoo.com", "704-299-0982"));
+
+      List<AuthoringEntity> authors = new ArrayList<>();
+      authors.add(new WritingGroup("writadven@gmail.com","The Writing Adventures Co.","Willie Moors", 2004));
+      authors.add(new WritingGroup("scholarWr@gmail.com","The Scholarly Writer","Romaine George", 2010));
+      authors.add(new WritingGroup("WWell@yahoo.com","Writewell","Chantelle Lum", 2004));
+      authors.add(new IndividualAuthor("IsiCooper@yahoo.com", "Isidore Cooper"));
+      authors.add(new IndividualAuthor("RosaRen@gmail.com", "Rosanne Rennell"));
+      authors.add(new AdHocTeam("fighTank@gmail.com", "Fighting Tanks"));
+      authors.add(new AdHocTeam("SecretAgent@yahoo.com", "Militant Secret Agents"));
+
+      List<Book> books = new ArrayList<>();
       //books.add(new Book("12345", "harry potty", 1999, publishers.get(0)));
 
       bookMain.createEntity(publishers);
-      //bookMain.createEntity(books);
+      bookMain.createEntity(authors);
+      bookMain.createEntity(books);
 
       //Display list of available options and have the user pick
       Scanner sc = new Scanner(System.in);

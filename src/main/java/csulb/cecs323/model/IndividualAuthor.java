@@ -15,7 +15,7 @@ public class IndividualAuthor extends AuthoringEntity
     private ArrayList<AdHocTeam> adHocTeams = new ArrayList<>();
 
     public IndividualAuthor () {}
-    public IndividualAuthor (String authorEmail, String name, String writerName, int year)
+    public IndividualAuthor (String authorEmail, String name)
     {
         super(authorEmail, name);
     }
