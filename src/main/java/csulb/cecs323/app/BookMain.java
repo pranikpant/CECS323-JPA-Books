@@ -86,8 +86,9 @@ public class BookMain {
       authors.add(new AdHocTeam("SecretAgent@yahoo.com", "Militant Secret Agents"));
 
       List<Book> books = new ArrayList<>();
-      //books.add(new Book("12345", "harry potty", 1999, publishers.get(0)));
-
+      books.add(new Book("12345", "Harry Potty", 1999, bookMain.getPublisher("Bob Murph"), bookMain.getAuthor("Writewell")));
+      books.add(new Book("77034", "I want to sleep", 2021, bookMain.getPublisher("Tameka Benjaminson"), bookMain.getAuthor("Fighting Tanks")));
+      
       bookMain.createEntity(publishers);
       bookMain.createEntity(authors);
       bookMain.createEntity(books);
