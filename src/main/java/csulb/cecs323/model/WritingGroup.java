@@ -3,10 +3,13 @@ package csulb.cecs323.model;
 import javax.persistence.*;
 
 @Entity
-@DiscriminatorValue("1")
+@DiscriminatorValue("WritingGroup")
 public class WritingGroup extends AuthoringEntity{
 
+    @Column
     private String headWriter;
+
+    @Column
     private int yearFormed;
 
     public WritingGroup() {}

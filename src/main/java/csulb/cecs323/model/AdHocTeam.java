@@ -1,16 +1,15 @@
 package csulb.cecs323.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Entity
-@DiscriminatorValue("3")
+@DiscriminatorValue("AdHocTeam")
 public class AdHocTeam extends AuthoringEntity {
-    @Id
-    Long id;
 
-    @ManyToMany
-    Set<IndividualAuthor> members;
+    @ManyToMany(mappedBy = "adHocTeams", cascade = CascadeType.ALL)
+    private ArrayList<IndividualAuthor> individualAuthors = new ArrayList<>();
 
     public AdHocTeam () {}
 

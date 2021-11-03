@@ -5,7 +5,8 @@ import java.util.ArrayList;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class AuthoringEntity {
+@DiscriminatorColumn(name="AUTHORING_ENTITY_TYPE")
+public abstract class AuthoringEntity {
     @Id
     @Column(nullable = false,length = 60)
     private String authorEmail;
