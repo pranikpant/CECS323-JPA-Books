@@ -15,8 +15,8 @@ public class IndividualAuthor extends AuthoringEntity
 
     public IndividualAuthor () {}
 
-    public IndividualAuthor (String email, String name, String writerName, int year)
+    public IndividualAuthor (String authorEmail, String name, String writerName, int year)
     {
-        super(email, name);
+        super(authorEmail, name);
     }
 }

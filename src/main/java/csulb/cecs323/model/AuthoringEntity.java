@@ -3,17 +3,17 @@ package csulb.cecs323.model;
 import javax.persistence.*;
 import java.util.ArrayList;
 
+@Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-
 public class AuthoringEntity {
     @Id
     @Column(nullable = false,length = 60)
-    private String email;
+    private String authorEmail;
 
     @Column(nullable = false, length = 45)
     private String name;
 
-    @OneToMany (mappedBy = "email",
+    @OneToMany (mappedBy = "authorEmail",
                 cascade = CascadeType.ALL,
                 orphanRemoval = true)
     private ArrayList<Book> book = new ArrayList<>();
@@ -38,15 +38,15 @@ public class AuthoringEntity {
 
     public AuthoringEntity () {}
 
-    public AuthoringEntity (String email, String name)
+    public AuthoringEntity (String authorEmail, String name)
     {
-        this.email = email;
+        this.authorEmail = authorEmail;
         this.name = name;
     }
 
-    public String getEmail () { return email; }
+    public String getauthorEmail () { return authorEmail; }
 
-    public void setEmail (String email) { this.email = email; }
+    public void setauthorEmail (String authorEmail) { this.authorEmail = authorEmail; }
 
     public String getName () { return name; }
 
@@ -55,6 +55,6 @@ public class AuthoringEntity {
     @Override
     public String toString()
     {
-        return "Name: " + this.getName() + "\nEmail: " + this.getEmail();
+        return "Name: " + this.getName() + "\nauthorEmail: " + this.getauthorEmail();
     }
 }

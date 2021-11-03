@@ -14,7 +14,7 @@ public class AdHocTeam extends AuthoringEntity {
 
     public AdHocTeam () {}
 
-    public AdHocTeam (String email, String name) {
-        super(email, name);
+    public AdHocTeam (String authorEmail, String name) {
+        super(authorEmail, name);
     }
 }

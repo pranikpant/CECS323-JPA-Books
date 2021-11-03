@@ -11,9 +11,9 @@ public class WritingGroup extends AuthoringEntity{
 
     public WritingGroup() {}
 
-    public WritingGroup (String email, String name, String writerName, int year)
+    public WritingGroup (String authorEmail, String name, String writerName, int year)
     {
-        super(email, name);
+        super(authorEmail, name);
         headWriter = writerName;
         yearFormed = year;
     }
@@ -29,7 +29,7 @@ public class WritingGroup extends AuthoringEntity{
     @Override
     public String toString()
     {
-        return "Name: " + this.getName() + "\nEmail: " + this.getEmail() + "\n Head Writer: " +
+        return "Name: " + this.getName() + "\nauthorEmail: " + this.getauthorEmail() + "\n Head Writer: " +
                 this.getWriter() + "\nYear Formed: "  + this.getYearFormed();
     }
 }

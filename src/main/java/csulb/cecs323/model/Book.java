@@ -25,8 +25,21 @@ public class Book {
 
     /**The name of the publisher */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "publisher_name",nullable = false)
+    @JoinColumn(name = "publisherName",referencedColumnName = "publisherName", nullable = false)
     private Publisher publisherName;
+
+    /**The authors associate with the book*/
+    @ManyToOne
+    @JoinColumn(name = "authorEmail", referencedColumnName = "authorEmail")
+    private AuthoringEntity authorEmail;
+
+    public AuthoringEntity getAuthorEmail() {
+        return authorEmail;
+    }
+
+    public void setAuthorEmail(AuthoringEntity authorEmail) {
+        this.authorEmail = authorEmail;
+    }
 
     public Book () {}
 

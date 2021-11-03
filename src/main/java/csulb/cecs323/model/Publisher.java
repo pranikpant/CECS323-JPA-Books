@@ -10,9 +10,9 @@ public class Publisher {
     @Column(nullable = false, length = 50)
     private String publisherName;
 
-    /** The email that we can use to contact the publisher*/
+    /** The authorEmail that we can use to contact the publisher*/
     @Column(nullable = false,length = 55)
-    private String email;
+    private String authorEmail;
 
     /** The phone number that we can use to contact the publisher*/
     @Column(nullable = false, length = 20, unique = true)
@@ -43,10 +43,10 @@ public class Publisher {
 
     public Publisher () {}
 
-    public Publisher (String name, String email, String number)
+    public Publisher (String name, String authorEmail, String number)
     {
         publisherName = name;
-        this.email = email;
+        this.authorEmail = authorEmail;
         phoneNumber = number;
     }
 
@@ -54,9 +54,9 @@ public class Publisher {
 
     public void setPublisherName (String publisherName) { this.publisherName = publisherName; }
 
-    public String getEmail () { return email; }
+    public String getauthorEmail () { return authorEmail; }
 
-    public void setEmail (String email) { this.email = email; }
+    public void setauthorEmail (String authorEmail) { this.authorEmail = authorEmail; }
 
     public String getPhoneNumber () { return phoneNumber; }
 
@@ -65,7 +65,7 @@ public class Publisher {
     @Override
     public String toString ()
     {
-        return "Publisher name: " + this.getPublisherName() + "\nEmail: " + this.getEmail()
+        return "Publisher name: " + this.getPublisherName() + "\nauthorEmail: " + this.getauthorEmail()
                 + "\nPhone Number: " + this.getPhoneNumber();
     }
 }
