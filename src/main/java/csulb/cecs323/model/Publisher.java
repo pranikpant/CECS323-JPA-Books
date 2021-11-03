@@ -3,6 +3,20 @@ import javax.persistence.*;
 import java.util.ArrayList;
 
 @Entity
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Publisher.countName",
+                query = "SELECT count(*) " +
+                        "FROM Publisher " +
+                        "WHERE publisherName = ?"),
+        @NamedNativeQuery(name = "Publisher.countEmail",
+                query = "SELECT count(*) " +
+                        "FROM Publisher " +
+                        "WHERE publisherEmail = ?"),
+        @NamedNativeQuery(name = "Publisher.countPhone",
+                query = "SELECT count(*) " +
+                        "FROM Publisher " +
+                        "WHERE phoneNumber = ?"),
+})
 public class Publisher {
 
     /** The name of the publisher*/
@@ -67,5 +81,26 @@ public class Publisher {
     {
         return "Publisher name: " + this.getPublisherName() + "\nauthorEmail: " + this.getPublisherEmail()
                 + "\nPhone Number: " + this.getPhoneNumber();
+    }
+
+    public static int countPublisherName(EntityManager em, String name) {
+        Query query = em.createNamedQuery("Publisher.countName").
+                    setParameter(1, name);
+        Integer count = ((Number) query.getSingleResult()).intValue();
+        return count;
+    }
+
+    public static int countPublisherEmail(EntityManager em, String email) {
+        Query query = em.createNamedQuery("Publisher.countEmail").
+                setParameter(1, email);
+        Integer count = ((Number) query.getSingleResult()).intValue();
+        return count;
+    }
+
+    public static int countPublisherPhone(EntityManager em, String phone) {
+        Query query = em.createNamedQuery("Publisher.countPhone").
+                setParameter(1, phone);
+        Integer count = ((Number) query.getSingleResult()).intValue();
+        return count;
     }
 }
