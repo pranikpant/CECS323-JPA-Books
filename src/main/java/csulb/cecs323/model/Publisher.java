@@ -16,6 +16,11 @@ import java.util.ArrayList;
                 query = "SELECT count(*) " +
                         "FROM Publisher " +
                         "WHERE phoneNumber = ?"),
+        @NamedNativeQuery(name = "ReturnPubInfo",
+                query = "Select * " +
+                        "FROM Publisher " +
+                        "WHERE name = ?",
+                resultClass = Book.class),
 })
 public class Publisher {
 

@@ -6,6 +6,13 @@ import java.util.ArrayList;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="AUTHORING_ENTITY_TYPE")
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "ReturnAuthorInfo",
+                query = "Select * " +
+                        "FROM AuthoringEntity " +
+                        "WHERE name = ?",
+                resultClass = AuthoringEntity.class),
+})
 public abstract class AuthoringEntity {
     /**The email of the author*/
     @Id

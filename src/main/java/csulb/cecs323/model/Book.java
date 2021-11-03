@@ -8,10 +8,16 @@ import javax.persistence.*;
         @UniqueConstraint(columnNames = {"title", "authorEmail"})
 })
 
-@NamedNativeQuery(name = "ReturnBookInfo", query = "Select * " +
-        "FROM BOOKS " +
-        "Where ISBN = ?",
-        resultClass = Book.class)
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "ReturnBookInfo", query = "Select * " +
+                "FROM BOOKS " +
+                "Where ISBN = ?",
+                resultClass = Book.class),
+        @NamedNativeQuery(name = "Book.count",
+                query = "Select count(*) " +
+                        "FROM BOOKS " +
+                        "Where ISBN = ?"),
+})
 
 public class Book {
 
@@ -48,12 +54,13 @@ public class Book {
 
     public Book () {}
 
-    public Book (String ISBN, String title, int year, Publisher name )
+    public Book (String ISBN, String title, int year, Publisher name, AuthoringEntity email)
     {
         this.ISBN = ISBN;
         this.title = title;
         yearPublished = year;
         publisherName = name;
+        authorEmail = email;
     }
 
     public String getISBN () { return ISBN; }
@@ -77,5 +84,12 @@ public class Book {
     {
         return "Title: " + this.getTitle() + "\nYear Published: " + this.getYearPublished()
                 + "\nISBN: " + this.getISBN() + "\nPublisher: " + this.getPublisherName();
+    }
+
+    public static int count(EntityManager em, String ISBN) {
+        Query query = em.createNamedQuery("Book.count").
+                setParameter(1, ISBN);
+        Integer count = ((Number) query.getSingleResult()).intValue();
+        return count;
     }
 }

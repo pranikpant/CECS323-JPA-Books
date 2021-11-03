@@ -71,8 +71,13 @@ public class BookMain {
 
       tx.begin();
 
-      //List<Publisher> publishers = new ArrayList<>();
+      List<Publisher> publishers = new ArrayList<>();
+      publishers.add(new Publisher("bob murph", "paint@me.com", "1234"));
       //List<Book> books = new ArrayList<>();
+      //books.add(new Book("12345", "harry potty", 1999, publishers.get(0)));
+
+      bookMain.createEntity(publishers);
+      //bookMain.createEntity(books);
 
       //Display list of available options and have the user pick
       Scanner sc = new Scanner(System.in);
@@ -98,22 +103,67 @@ public class BookMain {
             int choice1 = getIntRange(1, 3);
 
             if (choice1 == 1) {
-               //fixme
-               System.out.println("Add new Author entity");
+               System.out.println("Select an entity.: ");
+               System.out.println("1. Writing Group");
+               System.out.println("2. Individual Author");
+               System.out.println("3. Ad Hoc Team");
+               System.out.println("4. Add individual author to an existing Ad Hoc Team");
+               int subOption2 = getIntRange(1, 4);
+
+               if (subOption2 == 1) {
+               } else if (subOption2 == 2) {
+               } else if (subOption2 == 3) {
+               }else if (subOption2 == 4) {
+               }
             }
+            //If user chooses to add new publisher
             else if (choice1 == 2) {
                Publisher pub = BookMain.addPublisher(manager);
                manager.persist(pub);
             }
             else {
-
+               Book book = BookMain.addBook(manager, bookMain);
+               manager.persist(book);
             }
          }
 
          //If user chooses to list all the information about a specific Object
          else if (choice == 2) {
-            //fixme
-            cont = false;
+            System.out.println("What object would you like to learn more about?: ");
+            System.out.println("1. Publisher");
+            System.out.println("2. Book");
+            System.out.println("3. Writing Group");
+            int subOption1 = getIntRange(1, 3);
+            if(subOption1 == 1) {
+               System.out.println("List of publishers.");
+               for(int i = 0; i < publishers.size(); i++)
+               {
+                  System.out.println((i+1) + "." + publishers.get(i).getPublisherName());
+               }
+               System.out.println("Please select a publisher.");
+               int pubChoice = getIntRange(1,publishers.size());
+
+               System.out.println("Publisher Name: " + publishers.get(pubChoice - 1).getPublisherName());
+               System.out.println("Publisher Number: " + publishers.get(pubChoice - 1).getPhoneNumber());
+               System.out.println("Publisher Email: "+ publishers.get(pubChoice - 1).getPublisherEmail());
+               System.out.println("Publisher Books: "+ publishers.get(pubChoice - 1).getBook());
+
+            } else if (subOption1 == 2) {
+               /**System.out.println("List of books.");
+               for(int i = 0; i < books.size(); i++)
+               {
+                  System.out.println((i+1) + "." + books.get(i).getTitle());
+               }
+               System.out.println("Please select a book.");
+               int bookChoice = getIntRange(1,publishers.size());
+
+               System.out.println("Book Title: " + books.get(bookChoice - 1).getTitle());
+               System.out.println("Book ISBN: " + books.get(bookChoice - 1).getISBN());
+               System.out.println("Book Publisher: " + books.get(bookChoice - 1).getPublisherName());
+               System.out.println("Book Publication Year: " + books.get(bookChoice - 1).getYearPublished()); */
+
+            } else if (subOption1 == 3) {
+            }
          }
 
          //If user chooses to delete a Book
@@ -130,8 +180,15 @@ public class BookMain {
 
          //If user chooses to list the primary key of all the rows
          else if (choice == 5) {
-            //fixme
-            cont = false;
+            System.out.println("Which row's PK would you like to see?: ");
+            System.out.println("1. Publishers");
+            System.out.println("2. Books");
+            System.out.println("3. Authoring Entity");
+            int subOption1 = getIntRange(1, 3);
+            if(subOption1 == 1) {
+            } else if (subOption1 == 2) {
+            } else if (subOption1 == 3) {
+            }
          }
 
          //Otherwise, quit the program
@@ -140,14 +197,6 @@ public class BookMain {
             cont = false;
          }
       }
-
-      /**List<Publisher> publishers = new ArrayList<>();
-      publishers.add(new Publisher("bob murph", "paint@me.com", "1234"));
-      List<Book> books = new ArrayList<>();
-      books.add(new Book("12345", "harry potty", 1999, publishers.get(0)));
-
-      bookMain.createEntity(publishers);
-      bookMain.createEntity(books); */
 
       tx.commit();
       LOGGER.fine("End of Transaction");
@@ -175,27 +224,44 @@ public class BookMain {
    } // End of createEntity member method
 
    /**
-    * Think of this as a simple map from a String to an instance of auto_body_styles that has the
-    * same name, as the string that you pass in.  To create a new Cars instance, you need to pass
-    * in an instance of auto_body_styles to satisfy the foreign key constraint, not just a string
-    * representing the name of the style.
-    * //@param        The name of the autobody style that you are looking for.
-    * @return           The auto_body_styles instance corresponding to that style name.
+    * This as a simple map from a String to an instance of Publisher that has the
+    * same name as the string that you pass in.
+    * @param name       The name of the Publisher that you are looking for.
+    * @return           The Publisher instance corresponding to that name.
     */
-   /*
-   public auto_body_styles getStyle (String name) {
-      // Run the native query that we defined in the auto_body_styles entity to find the right style.
-      List<auto_body_styles> styles = this.entityManager.createNamedQuery("ReturnAutoBodyStyle",
-              auto_body_styles.class).setParameter(1, name).getResultList();
-      if (styles.size() == 0) {
-         // Invalid style name passed in.
+
+   public Publisher getPublisher (String name) {
+      // Run the native query that we defined in the publisher entity to find the right publisher.
+      List<Publisher> pub = this.entityManager.createNamedQuery("ReturnPubInfo",
+              Publisher.class).setParameter(1, name).getResultList();
+      if (pub.size() == 0) {
+         // Invalid name passed in.
          return null;
       } else {
          // Return the style object that they asked for.
-         return styles.get(0);
+         return pub.get(0);
       }
-   }// End of the getStyle method
-   */
+   }// End of the getPublisher method
+
+   /**
+    * This as a simple map from a String to an instance of AuthoringEntity that has the
+    * same name as the string that you pass in.
+    * @param name       The name of the AuthoringEntity that you are looking for.
+    * @return           The AuthoringEntity instance corresponding to that name.
+    */
+
+   public AuthoringEntity getAuthor (String name) {
+      // Run the native query that we defined in the publisher entity to find the right publisher.
+      List<AuthoringEntity> author = this.entityManager.createNamedQuery("ReturnAuthorInfo",
+              AuthoringEntity.class).setParameter(1, name).getResultList();
+      if (author.size() == 0) {
+         // Invalid name passed in.
+         return null;
+      } else {
+         // Return the style object that they asked for.
+         return author.get(0);
+      }
+   }// End of the getAuthor method
 
    /**
     * Prompt the user for the information needed to add a new publisher.
@@ -236,4 +302,32 @@ public class BookMain {
       }
       return new Publisher(name, email, phone);
    }
-} // End of CarClub class
+
+   /**
+    * Prompt the user for the information needed to add a new book.
+    * @param em   The application entity manager
+    * @return     A new book
+    * @apiNote    There is no way out of this without creating a Book instance
+    */
+   public static Book addBook(EntityManager em, BookMain bm) {
+      Scanner sc = new Scanner( System.in );
+      System.out.println("Enter the ISBN of the book: ");
+      String ISBN = sc.nextLine();
+      int existingBook = Book.count(em, ISBN);
+      while (existingBook > 0) {
+         System.out.println("Error! The book has already existed");
+         System.out.println("Enter the ISBN of the book: ");
+         ISBN = sc.nextLine();
+         existingBook = Book.count(em, ISBN);
+      }
+      System.out.println("Enter the title of the book: ");
+      String title = sc.nextLine();
+      System.out.println("Enter the published year of the book: ");
+      int year = sc.nextInt();
+      System.out.println("Enter the publisher's name of the book: ");
+      String pname = sc.nextLine();
+      System.out.println("Enter the author's name of the book: ");
+      String aname = sc.nextLine();
+      return new Book (ISBN, title, year, bm.getPublisher(pname), bm.getAuthor(aname));
+   }
+} // End of BookMain class
