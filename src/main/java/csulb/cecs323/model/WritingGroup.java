@@ -5,10 +5,11 @@ import javax.persistence.*;
 @Entity
 @DiscriminatorValue("WritingGroup")
 public class WritingGroup extends AuthoringEntity{
-
+    /**The head writer of the writing group*/
     @Column
     private String headWriter;
 
+    /**The year when the writing group formed*/
     @Column
     private int yearFormed;
 

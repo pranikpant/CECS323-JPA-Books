@@ -3,6 +3,11 @@ package csulb.cecs323.model;
 import javax.persistence.*;
 
 @Entity
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"title", "publisherName"}),
+        @UniqueConstraint(columnNames = {"title", "authorEmail"})
+})
+
 @NamedNativeQuery(name = "ReturnBookInfo", query = "Select * " +
         "FROM BOOKS " +
         "Where ISBN = ?",
@@ -12,15 +17,15 @@ public class Book {
 
     /** A unique number associated with the book*/
     @Id
-    @Column(nullable = false,length = 13)
+    @Column(nullable = false,length = 17)
     private String ISBN;
 
     /**The name of the book*/
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 80)
     private String title;
 
     /**The year the book was published */
-    @Column(nullable = false, length = 4)
+    @Column(nullable = false)
     private int yearPublished;
 
     /**The name of the publisher */

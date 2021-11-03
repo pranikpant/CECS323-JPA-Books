@@ -7,11 +7,13 @@ import java.util.ArrayList;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="AUTHORING_ENTITY_TYPE")
 public abstract class AuthoringEntity {
+    /**The email of the author*/
     @Id
-    @Column(nullable = false,length = 60)
+    @Column(nullable = false,length = 30)
     private String authorEmail;
 
-    @Column(nullable = false, length = 45)
+    /**The name of the author*/
+    @Column(nullable = false, length = 80)
     private String name;
 
     @OneToMany (mappedBy = "authorEmail",
@@ -29,12 +31,12 @@ public abstract class AuthoringEntity {
 
     public void addBook(Book b) {
         book.add(b);
-        //b.setStyles(this);
+        b.setAuthorEmail(this);
     }
 
     public void removeBook(Book b) {
         book.remove(b);
-        //b.setStyles(null);
+        b.setAuthorEmail(null);
     }
 
     public AuthoringEntity () {}

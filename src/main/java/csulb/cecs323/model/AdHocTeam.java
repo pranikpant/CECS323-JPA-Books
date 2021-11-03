@@ -16,4 +16,12 @@ public class AdHocTeam extends AuthoringEntity {
     public AdHocTeam (String authorEmail, String name) {
         super(authorEmail, name);
     }
+
+    public ArrayList<IndividualAuthor> getIndividualAuthors() {
+        return individualAuthors;
+    }
+
+    public void setIndividualAuthors(ArrayList<IndividualAuthor> individualAuthors) {
+        this.individualAuthors = individualAuthors;
+    }
 }

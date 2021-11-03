@@ -7,15 +7,15 @@ public class Publisher {
 
     /** The name of the publisher*/
     @Id
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 80)
     private String publisherName;
 
     /** The authorEmail that we can use to contact the publisher*/
-    @Column(nullable = false,length = 55)
-    private String authorEmail;
+    @Column(nullable = false,length = 80, unique = true)
+    private String publisherEmail;
 
     /** The phone number that we can use to contact the publisher*/
-    @Column(nullable = false, length = 20, unique = true)
+    @Column(nullable = false, length = 24, unique = true)
     private String phoneNumber;
 
     @OneToMany (mappedBy = "publisherName",
@@ -33,20 +33,20 @@ public class Publisher {
 
     public void addBook(Book b) {
         book.add(b);
-        //b.setStyles(this);
+        b.setPublisherName(this);
     }
 
     public void removeBook(Book b) {
         book.remove(b);
-        //b.setStyles(null);
+        b.setPublisherName(null);
     }
 
     public Publisher () {}
 
-    public Publisher (String name, String authorEmail, String number)
+    public Publisher (String name, String email, String number)
     {
         publisherName = name;
-        this.authorEmail = authorEmail;
+        this.publisherEmail = email;
         phoneNumber = number;
     }
 
@@ -54,9 +54,9 @@ public class Publisher {
 
     public void setPublisherName (String publisherName) { this.publisherName = publisherName; }
 
-    public String getauthorEmail () { return authorEmail; }
+    public String getPublisherEmail () { return publisherEmail; }
 
-    public void setauthorEmail (String authorEmail) { this.authorEmail = authorEmail; }
+    public void setPublisherEmail (String email) { this.publisherEmail = email; }
 
     public String getPhoneNumber () { return phoneNumber; }
 
@@ -65,7 +65,7 @@ public class Publisher {
     @Override
     public String toString ()
     {
-        return "Publisher name: " + this.getPublisherName() + "\nauthorEmail: " + this.getauthorEmail()
+        return "Publisher name: " + this.getPublisherName() + "\nauthorEmail: " + this.getPublisherEmail()
                 + "\nPhone Number: " + this.getPhoneNumber();
     }
 }
